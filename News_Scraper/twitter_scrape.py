@@ -7,6 +7,8 @@ import pandas as pd
 import datetime
 from openpyxl import load_workbook
 
+# -*- coding: UTF-8 -*-
+
 class find_tweet:
 
     def generate_url(self, keywords):
@@ -31,8 +33,7 @@ class find_tweet:
         return kw
 
     def find_tweet_title_url(self, keywords):
-        browser = webdriver.Ie(executable_path=
-                               "/Users/Devin/Downloads/python-3.5.2-0/Lib/twitterscraper/chromedriver")
+        browser = webdriver.Chrome()
         browser.get(self.generate_url(keywords))
         time.sleep(1)
 
@@ -74,29 +75,38 @@ class find_tweet:
         return [x for x in seq if not (x in seen or seen_add(x))]
 
 if __name__ == "__main__":
+    while True:
 
-    insert_keywords = [['현대카드', 'RPA'],
-                       ['정태영', '현대'],
-                       ['Bill Gates', 'Microsoft']]
-    now = datetime.datetime.now()
-    lt = find_tweet()
-    excelname = 'C:/Users/Devin/Twitter_Posts_' + now.strftime("%Y%m%d-%H%M") + '.xlsx'
+        insert_keywords = [['정태영'],
+                           ['현대카드'],
+                           ['현대카드', '정태영'],
+                           ['현대커머셜'],
+                           ['현대캐피탈']]
+        now = datetime.datetime.now()
+        lt = find_tweet()
+        excelname = 'Twitter_Posts_' + now.strftime("%Y%m%d-%H%M") + '.xlsx'
+        try:
+            for i in range(len(insert_keywords)):
+                page_link = lt.generate_url(insert_keywords[i])
+                d = lt.find_tweet_title_url(insert_keywords[i])
 
-    for i in range(len(insert_keywords)):
-        page_link = lt.generate_url(insert_keywords[i])
-        d = lt.find_tweet_title_url(insert_keywords[i])
+                if i == 0:
+                    pd.DataFrame(data=d).to_excel(excelname, sheet_name=lt.generate_sheet(insert_keywords[i]), index=False)
+                    time.sleep(3)
+                else:
+                    path = excelname
 
-        if i == 0:
-            pd.DataFrame(data=d).to_excel(excelname, sheet_name=lt.generate_sheet(insert_keywords[i]), index=False)
-        else:
-            path = excelname
+                    book = load_workbook(path)
 
-            book = load_workbook(path)
+                    writer = pd.ExcelWriter(path, engine='openpyxl')
+                    writer.book = book
 
-            writer = pd.ExcelWriter(path, engine='openpyxl')
-            writer.book = book
+                    pd.DataFrame(data=d).to_excel(writer, sheet_name=lt.generate_sheet(insert_keywords[i]), index=False)
 
-            pd.DataFrame(data=d).to_excel(writer, sheet_name=lt.generate_sheet(insert_keywords[i]), index=False)
+                    writer.save()
+                    writer.close()
+                    time.sleep(3)
+        except:
+            pass
 
-            writer.save()
-            writer.close()
+        time.sleep(60)
