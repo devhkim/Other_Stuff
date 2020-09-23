@@ -15,9 +15,9 @@ apt_price = apt.APT()
 #to use local, type in 0 for dbname (5th parameter)
 apt_price.get_to_mdb(1, 2015, 8, 2020,
                    "C:\\Users\\Devin\\Downloads\\reg_code_test.xlsx",
-                   "wUOXLKQdCOC0%2Bsb3KGxk2OB5gj2x5Xx9f%2FEPusoDZ%2Bu18FxLLpXe6zwa7R4BGIRSWsS7skivQuNt9R48GJ27Hw%3D%3D",
-                   "devin",
-                   "Deutsches7",
+                   "xxx",
+                   "xxx",
+                   "xxx",
                    0,
                    "Real_Estate",
                    "Seoul_real_price_201501_now")
